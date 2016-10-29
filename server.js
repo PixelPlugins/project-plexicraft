@@ -1,10 +1,15 @@
-var express = require('express');
-var path = require('path');
-var SocketServer = require('ws').Server;
+'use strict';
+
+const express = require('express');
+const SocketServer = require('ws').Server;
+const path = require('path');
+
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
 
 const server = express()
-  .use((req, res) => res.sendFile(path.join(__dirname, 'index.html')))
-  .listen(5000, () => console.log(`Listening on ${ 5000 }`));
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const wss = new SocketServer({ server });
 
