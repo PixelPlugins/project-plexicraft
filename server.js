@@ -28,6 +28,9 @@ wss.on('connection', (ws) => {
 		  if(args[2] == "%Accounts%"){
 			  accounts(args, ws);
 		  }
+		  if(args[2] == "%Chat%"){
+			  chat(args, ws);
+		  }
 	  }
   });
 });
@@ -54,6 +57,14 @@ function accounts(args, ws){
 				ws.send("@PLEXI %Accounts% %you% Fail");
 			}
 		}
+	}
+}
+
+function chat(args, ws){
+	if(args[3] == "Send"){
+		wss.clients.forEach((client) => {
+			client.send("@PLEXI" + args[1] + " %you% Message " + args[4]);
+		});
 	}
 }
 
