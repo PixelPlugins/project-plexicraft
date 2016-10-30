@@ -1,15 +1,48 @@
 <div id="el">
+	
+</div>
 
+<div id="sign-up" style="border: 2px solid">
+	Username: <input type="text" id="username"> <br/>
+	Password: <input type="text" id="password"> <br/>
+	<button onclick="signup()">Sign Up</button>
+</div>
+
+<div id="log-in" style="border: 2px solid">
+	Username: <input type="text" id="login-username"> <br/>
+	Password: <input type="text" id="login-password"> <br/>
+	<button onclick="login()">Log In</button>
 </div>
 
 <script>
 var HOST = location.origin.replace(/^http/, 'ws')
-console.log(HOST);
+console.log("wss://plexicraft-server.herokuapp.com");
 var ws = new WebSocket(HOST);
 var el = document.getElementById('server-time');
 
+ws.onopen = function(){
+	ws.send("@PLEXI test %Accounts% Ping Hi!");
+};
+
 ws.onmessage = function (event) {
   document.getElementById('el').innerHTML = 'Server time: ' + event.data;
-  ws.send(event.data);
+  //ws.send("@PLEXI test %Accounts% Create emebo wee");
+  if(event.data == "@PLEXI %Accounts% %you% Success"){
+	//ws.send("@PLEXI test %Accounts% Login emebo wee");
+  }
 };
+
+function signup(){
+	var username = document.getElementById("username").value;
+	var password = document.getElementById("password").value;
+	
+	ws.send("@PLEXI test %Accounts% Create " + username + " " + password);
+}
+
+function login(){
+	var username = document.getElementById("login-username").value;
+	var password = document.getElementById("login-password").value;
+	
+	ws.send("@PLEXI test %Accounts% Login " + username + " " + password);
+}
 </script>
