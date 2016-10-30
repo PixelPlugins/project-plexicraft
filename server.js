@@ -16,6 +16,10 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('close', () => console.log('Client disconnected'));
+  
+  ws.on('message', function(data, flags){
+	  console.log('Received: ' + data);
+  });
 });
 
 setInterval(() => {
