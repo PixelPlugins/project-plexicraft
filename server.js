@@ -63,7 +63,7 @@ function accounts(args, ws){
 function chat(args, ws){
 	if(args[3] == "Send"){
 		wss.clients.forEach((client) => {
-			client.send("@PLEXI" + args[1] + " %you% Message " + args[4]);
+			client.send("@PLEXI" + " " + args[1] + " %you% Message " + args[4]);
 		});
 	}
 }
