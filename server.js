@@ -1,6 +1,7 @@
 'use strict';
 
 var sql = require('mysql');
+var nodemailer = require("nodemailer");
 const express = require('express');
 const SocketServer = require('ws').Server;
 const path = require('path');
@@ -13,6 +14,9 @@ const server = express()
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
 const wss = new SocketServer({ server });
+
+var transporter = nodemailer.createTransport('omgami@mail.com');
+
 
 var accountlist = {};
 
@@ -91,6 +95,7 @@ function accounts(args, ws){
 		});
 		console.log("Created account with Username: " + args[4] + " and Password: " + accountlist[args[4]]);
 		ws.send("@PLEXI %Accounts% %you% Success");
+		transporter.sendMail('Someone joined Plexicraft! Welcome ' + args[4] + " to the club!")
 	}
 	
 	if(args[3] == "Login"){
