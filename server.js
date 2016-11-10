@@ -38,6 +38,10 @@ wss.on('connection', (ws) => {
 		  if(args[2] == "%Flexums%"){
 			  flexums(args, ws);
 		  }
+		  
+		  if(args[2] == "%Inv%"){
+			  inv(args, ws);
+		  }
 	  }
   });
 });
@@ -106,8 +110,30 @@ function flexums(args, ws){
 	}
 }
 
-/*setInterval(() => {
-  wss.clients.forEach((client) => {
-    client.send(new Date().toTimeString());
-  });
-}, 1000);*/
+function inv(args, ws){
+	if(args[3] == "Add"){
+		fs.readFile('accounts.json', 'utf8', function(err, content){
+			accountlist = JSON.parse(content);
+			
+			if(Object.keys(accountlist[args[4]].Storage).indexOf("Inventory") == -1){
+				accountlist[args[4]].Storage["Inventory"] = [];
+			}
+			
+			if(args[5] == "Sword_Iron"){
+				accountlist[args[4]].Storage.Inventory.push("Sword_Iron");
+			}
+			
+			fs.writeFile('accounts.json', JSON.stringify(accountlist), function(err){
+				if(err) throw err;
+			});
+		});
+	}
+	
+	if(args[3] == "Get"){
+		if(Object.keys(accountlist[args[4]].Storage).indexOf("Inventory") == -1){
+			accountlist[args[4]].Storage["Inventory"] = [];
+		}
+			
+		ws.send(accountlist[args[4]].Storage.Inventory.toString());
+	}
+}
