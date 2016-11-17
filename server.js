@@ -163,10 +163,12 @@ function inv(args, ws){
 	}
 	
 	if(args[3] == "Get"){
-		if(Object.keys(accountlist[args[4]].Storage).indexOf("Inventory") == -1){
-			accountlist[args[4]].Storage["Inventory"] = [];
+		if(Object.keys(accountlist).indexOf(args4) != -1){
+			if(Object.keys(accountlist[args[4]].Storage).indexOf("Inventory") == -1){
+				accountlist[args[4]].Storage["Inventory"] = [];
+			}
+				
+			ws.send(accountlist[args[4]].Storage.Inventory.toString());
 		}
-			
-		ws.send(accountlist[args[4]].Storage.Inventory.toString());
 	}
 }
