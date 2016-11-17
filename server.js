@@ -57,7 +57,13 @@ function accounts(args, ws){
 			if(err) throw err;
 			
 			accountlist = JSON.parse(content);
-			accountlist[args[4]] = {Password: args[5], Flexums: 100, Apps: {}, Storage: {}, Extra: {}};
+			if(Object.keys(accountlist).indexOf(args[4]) == -1){
+				accountlist[args[4]] = {Password: args[5], Flexums: 100, Apps: {}, Storage: {}, Extra: {}};
+			}
+			else{
+				ws.send("@PLEXI %Accounts% %you% Fail 303");
+			}
+			
 			var accountstr = JSON.stringify(accountlist);
 			
 			fs.writeFile('accounts.json', accountstr, function(err){
@@ -71,8 +77,16 @@ function accounts(args, ws){
 				if(err) throw err;
 				
 				accountlist = JSON.parse(content);
-				if(accountlist[args[4]].Password == args[5]){
-					ws.send("@PLEXI %Accounts% %you% Success");
+				if(Object.keys(accountlist).indexOf(args[4]) != -1){
+					if(accountlist[args[4]].Password == args[5]){
+						ws.send("@PLEXI %Accounts% %you% Success");
+					}
+					else{
+						ws.send("@PLEXI %Accounts% %you% Fail 505");
+					}
+				}
+				else{
+					ws.send("@PLEXI %Accounts% %you% Fail 404");
 				}
 			});
 	}
@@ -94,19 +108,33 @@ function flexums(args, ws){
 			
 			accountlist = JSON.parse(content);
 			console.log("atempting payment");
-			if(accountlist[args[1]].Password == args[4]){
-				console.log("Paying...");
-				accountlist[args[1]].Flexums -= parseInt(args[5]);
-				accountlist[args[6]].Flexums += parseInt(args[5]);
-				
-				fs.writeFile('accounts.json', JSON.stringify(accountlist), function(err){
-					if(err) throw err;
-				});
+			
+			if(Object.keys(accountlist).indexOf(args[1]) != -1){
+				if(accountlist[args[1]].Password == args[4]){
+					console.log("Paying...");
+					accountlist[args[1]].Flexums -= parseInt(args[5]);
+					accountlist[args[6]].Flexums += parseInt(args[5]);
+					
+					fs.writeFile('accounts.json', JSON.stringify(accountlist), function(err){
+						if(err) throw err;
+					});
+				}
+				else{
+					ws.send("@PLEXI %Flexums% %you% Fail 505");
+				}
+			}
+			else{
+				ws.send("@PLEXI %Flexums% %you% Fail 404");
 			}
 		});
 	}
 	if(args[3] == "Get"){
-		ws.send(accountlist[args[4]].Flexums.toString());
+		if(Object.keys(accountlist).indexOf(args[4]) != -1){
+			ws.send(accountlist[args[4]].Flexums.toString());
+		}
+		else{
+			ws.send("@PLEXI %Flexums% %you% Fail 404");
+		}
 	}
 }
 
@@ -115,12 +143,17 @@ function inv(args, ws){
 		fs.readFile('accounts.json', 'utf8', function(err, content){
 			accountlist = JSON.parse(content);
 			
-			if(Object.keys(accountlist[args[4]].Storage).indexOf("Inventory") == -1){
-				accountlist[args[4]].Storage["Inventory"] = [];
+			if(Object.keys(accountlist).indexOf(args[4]) != -1){
+				if(Object.keys(accountlist[args[4]].Storage).indexOf("Inventory") == -1){
+					accountlist[args[4]].Storage["Inventory"] = [];
+				}
+				
+				if(args[5] == "Sword_Iron"){
+					accountlist[args[4]].Storage.Inventory.push("Sword_Iron");
+				}
 			}
-			
-			if(args[5] == "Sword_Iron"){
-				accountlist[args[4]].Storage.Inventory.push("Sword_Iron");
+			else{
+				ws.send("@PLEXI %Inv% %you% Fail 404");
 			}
 			
 			fs.writeFile('accounts.json', JSON.stringify(accountlist), function(err){
