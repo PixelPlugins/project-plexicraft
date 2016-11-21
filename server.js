@@ -1,6 +1,6 @@
 'use strict';
 
-
+var media = {};
 var fs = require('fs');
 var sql = require('mysql');
 const express = require('express');
@@ -17,6 +17,38 @@ const server = express()
 const wss = new SocketServer({ server });
 
 var accountlist = {};
+
+function med(args, ws){
+	if(args[3] == "Get"){
+		fs.readFile('Media.json', 'utf8', function(err, content){
+			if(err) throw err;
+			
+			media = JSON.parse(content);
+			if(Object.keys(media).indexOf('Posts') == -1){
+				media['Posts'] = [];
+			}
+			
+			ws.send(JSON.stringify(media));
+		});
+	}
+	
+	if(args[3] == "Post"){
+		fs.readFile('Media.json', 'utf8', function(err, content){
+			if(err) throw err;
+			
+			media = JSON.parse(content);
+			if(Object.keys(media).indexOf('Posts') == -1){
+				media['Posts'] = [];
+			}
+			
+			media.Posts.push({PostedBy: args[1], Post: args[4]});
+			
+			fs.writeFile('Media.json', JSON.stringify(media), function(err){
+				if(err) throw err;
+			});
+		});
+	}
+}
 
 wss.on('connection', (ws) => {
   console.log('Client connected');
@@ -41,6 +73,10 @@ wss.on('connection', (ws) => {
 		  
 		  if(args[2] == "%Inv%"){
 			  inv(args, ws);
+		  }
+		  
+		  if(args[2] == "%Media%"){
+			  med(args, ws);
 		  }
 	  }
   });
@@ -170,5 +206,19 @@ function inv(args, ws){
 				
 			ws.send(accountlist[args[4]].Storage.Inventory.toString());
 		}
+	}
+}
+
+function admin(args, ws){
+	if(args[3] == "GetAccountsList"){
+		fs.readFile('accounts.json', 'utf8', function(err, content){
+			if(err) throw err;
+			
+			ws.send(content);
+		});
+	}
+	
+	if(args[3] == "SetAccountsList"){
+		
 	}
 }
