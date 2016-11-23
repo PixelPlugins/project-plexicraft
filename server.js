@@ -187,6 +187,10 @@ function inv(args, ws){
 				if(args[5] == "Sword_Iron"){
 					accountlist[args[4]].Storage.Inventory.push("Sword_Iron");
 				}
+				
+				if(args[5] == "Hat_Turkey"){
+					accountlist[args[4]].Storage.Inventory.push("Hat_Turkey");
+				}
 			}
 			else{
 				ws.send("@PLEXI %Inv% %you% Fail 404");
