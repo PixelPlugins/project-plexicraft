@@ -78,9 +78,35 @@ wss.on('connection', (ws) => {
 		  if(args[2] == "%Media%"){
 			  med(args, ws);
 		  }
+		  
+		  if(args[2] == "%ClanzWar%"){
+			  ClanzWar(args, ws);
+		  }
 	  }
   });
 });
+
+function ClanzWar(args, ws){
+	if(args[3] == "JoinClan"){
+		if(args[4] == "Vernix"){
+			fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+				if(err) throw err;
+				
+				var clanzobj = JSON.parse(content);
+				clanzobj.VernixMembers.push(args[5]);
+				var clanzstring = JSON.stringify(clansobj);
+				fs.writeFile('ClanzWar.json', clanzstring, function(err){
+					if(err) throw err;
+				});
+			});
+		}
+	}
+	if(args[3] == "GetClanzObj"){
+		fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+			ws.send(content);
+		});
+	}
+}
 
 function accounts(args, ws){
 	if(args[3] == "Ping"){
