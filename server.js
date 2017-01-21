@@ -32,6 +32,13 @@ function med(args, ws){
 		});
 	}
 	
+	if(args[3] == "GetMediaObj"){
+		fs.readFile('Media.json', 'utf-8', function(err, content){
+			if(err) throw err;
+			ws.send(content);
+		});
+	}
+	
 	if(args[3] == "Post"){
 		fs.readFile('Media.json', 'utf8', function(err, content){
 			if(err) throw err;
@@ -100,11 +107,72 @@ function ClanzWar(args, ws){
 				});
 			});
 		}
+		if(args[4] == "Matrill"){
+			fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+				if(err) throw err;
+				
+				var clanzobj = JSON.parse(content);
+				clanzobj.MatrillMembers.push(args[5]);
+				var clanzstring = JSON.stringify(clansobj);
+				fs.writeFile('ClanzWar.json', clanzstring, function(err){
+					if(err) throw err;
+				});
+			});
+		}
+	}
+	if(args[3] == "LeaveClan"){
+		fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+			if(err) throw err;
+			var clansobj = JSON.parse(content);
+			
+			if(args[4] == "Vernix"){
+				for(var i = 0; i < clanzobj.Vernix.length; i++){
+					if(clanzobj.Vernix[i] == args[4]){
+						clanzobj.Vernix.splice(i, 1);
+					}
+				}
+			}
+			
+			if(args[4] == "Matrill"){
+				for(var i = 0; i < clanzobj.Matrill.length; i++){
+					if(clanzobj.Matrill[i] == args[4]){
+						clanzobj.Matrill.splice(i, 1);
+					}
+				}
+			}
+		});
 	}
 	if(args[3] == "GetClanzObj"){
 		fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+			if(err) throw err;
 			ws.send(content);
 		});
+	}
+	if(args[3] == "Score"){
+		if(args[4] == "Vernix"){
+			fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+				if(err) throw err;
+				
+				var clanzobj = JSON.parse(content);
+				clanzobj.Vernix += parseInt(args[5]);
+				var clanzstring = JSON.stringify(clansobj);
+				fs.writeFile('ClanzWar.json', clanzstring, function(err){
+					if(err) throw err;
+				});
+			});
+		}
+		if(args[4] == "Matrill"){
+			fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
+				if(err) throw err;
+				
+				var clanzobj = JSON.parse(content);
+				clanzobj.Matrill += parseInt(args[5]);
+				var clanzstring = JSON.stringify(clansobj);
+				fs.writeFile('ClanzWar.json', clanzstring, function(err){
+					if(err) throw err;
+				});
+			});
+		}
 	}
 }
 
@@ -112,6 +180,12 @@ function accounts(args, ws){
 	if(args[3] == "Ping"){
 		console.log("Received a ping!");
 		ws.send(args[4]);
+	}
+	
+	if(args[3] == "GetAccountsList"){
+		fs.readFile('accounts.json', 'utf-8', function(err, content){
+			ws.send(content);
+		});
 	}
 	
 	if(args[3] == "Create"){
