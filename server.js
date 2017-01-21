@@ -101,7 +101,7 @@ function ClanzWar(args, ws){
 				
 				var clanzobj = JSON.parse(content);
 				clanzobj.VernixMembers.push(args[5]);
-				var clanzstring = JSON.stringify(clansobj);
+				var clanzstring = JSON.stringify(clanzobj);
 				fs.writeFile('ClanzWar.json', clanzstring, function(err){
 					if(err) throw err;
 				});
@@ -113,7 +113,7 @@ function ClanzWar(args, ws){
 				
 				var clanzobj = JSON.parse(content);
 				clanzobj.MatrillMembers.push(args[5]);
-				var clanzstring = JSON.stringify(clansobj);
+				var clanzstring = JSON.stringify(clanzobj);
 				fs.writeFile('ClanzWar.json', clanzstring, function(err){
 					if(err) throw err;
 				});
