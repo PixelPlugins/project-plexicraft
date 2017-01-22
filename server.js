@@ -123,11 +123,11 @@ function ClanzWar(args, ws){
 	if(args[3] == "LeaveClan"){
 		fs.readFile('ClanzWar.json', 'utf-8', function(err, content){
 			if(err) throw err;
-			var clansobj = JSON.parse(content);
+			var clanzobj = JSON.parse(content);
 			
 			if(args[4] == "Vernix"){
 				for(var i = 0; i < clanzobj.Vernix.length; i++){
-					if(clanzobj.Vernix[i] == args[4]){
+					if(clanzobj.Vernix[i] == args[5]){
 						clanzobj.Vernix.splice(i, 1);
 					}
 				}
@@ -135,7 +135,7 @@ function ClanzWar(args, ws){
 			
 			if(args[4] == "Matrill"){
 				for(var i = 0; i < clanzobj.Matrill.length; i++){
-					if(clanzobj.Matrill[i] == args[4]){
+					if(clanzobj.Matrill[i] == args[5]){
 						clanzobj.Matrill.splice(i, 1);
 					}
 				}
